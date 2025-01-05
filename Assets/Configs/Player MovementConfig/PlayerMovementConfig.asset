@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54417793831403c4691cc40050170951, type: 3}
+  m_Name: PlayerMovementConfig
+  m_EditorClassIdentifier: 
+  player: {fileID: 3191624550175880182, guid: e0763cdeb3aea7740842ec6cb95054c3, type: 3}
+  moveDistance: 5
+  moveSpeed: 25
+  positionThreshold: 0.0001
+  playerPosition: {x: -1.33, y: 0, z: -42.74}
