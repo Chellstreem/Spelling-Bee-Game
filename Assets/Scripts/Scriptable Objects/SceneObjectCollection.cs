@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SceneObjectCollection", menuName = "Scriptable Objects/SceneObjectCollection")]
 public class SceneObjectCollection : ScriptableObject
 {
-    [SerializeField] private SceneObject[] sceneObjects;
+    [SerializeField] private SceneObjectConfig[] sceneObjects;
 
-    public SceneObject[] SceneObjects => sceneObjects;
+    public SceneObjectConfig[] SceneObjects => sceneObjects;
 }

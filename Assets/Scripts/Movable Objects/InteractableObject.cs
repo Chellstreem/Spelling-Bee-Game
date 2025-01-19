@@ -1,33 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableObject : MovableObject
+namespace MovableObjects
 {
-    private void OnEnable()
+    public class InteractableObject : MovableObject, IEventSubscriber<OnWordCompleted>, IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>
     {
-        StartMoving();
+        private void OnEnable()
+        {
+            StartMoving();
 
-        EventBus.OnLoss += StopMoving;
-        EventBus.OnVictory += StopMoving;
-        EventBus.OnWordCompleted += ReturnToPool;
+            eventManager.Subscribe<OnDeath>(this);
+            eventManager.Subscribe<OnVictory>(this);
+            eventManager.Subscribe<OnWordCompleted>(this);
+        }
+
+        private void OnDisable()
+        {
+            StopMoving();
+
+            eventManager.Unsubscribe<OnDeath>(this);
+            eventManager.Unsubscribe<OnVictory>(this);
+            eventManager.Unsubscribe<OnWordCompleted>(this);
+        }
+
+        private void OnDestroy()
+        {
+            eventManager.Unsubscribe<OnDeath>(this);
+            eventManager.Unsubscribe<OnVictory>(this);
+            eventManager.Unsubscribe<OnWordCompleted>(this);
+        }
+
+        public void OnEvent(OnWordCompleted eventData)
+        {
+            particlePlayer.PlayParticle(ParticleType.BasicSpark, transform.position);
+            ReturnToOriginalState();
+        }
+        public void OnEvent(OnVictory eventData) => StopMoving();
+
+        public void OnEvent(OnDeath eventData) => StopMoving();
     }
-
-    private void OnDisable()
-    {
-        StopMoving();
-
-        EventBus.OnLoss -= StopMoving;
-        EventBus.OnVictory -= StopMoving;
-        EventBus.OnWordCompleted -= ReturnToPool;
-    }
-
-    private void OnDestroy()
-    {
-        EventBus.OnLoss -= StopMoving;
-        EventBus.OnVictory -= StopMoving;
-        EventBus.OnWordCompleted -= ReturnToPool;
-    }    
-
-    private void OnVictory() => StopMoving();
 }

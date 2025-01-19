@@ -3,7 +3,7 @@
 public class SpawnableObject
 {
     private GameObject gameObject;
-    private SpawnableConfig.ObjectGroup objectGroup;
+    private SpawnableObjectType objectGroup;
     private float minPosX;
     private float maxPosX;
     private float minPosY;
@@ -12,7 +12,7 @@ public class SpawnableObject
     private Transform cachedTransform; // Поле для кэширования Transform
 
     public GameObject GameObject => gameObject;
-    public SpawnableConfig.ObjectGroup ObjectGroup => objectGroup;
+    public SpawnableObjectType ObjectGroup => objectGroup;
     public float MinPosX => minPosX;
     public float MaxPosX => maxPosX;
     public float MinPosY => minPosY;
@@ -20,7 +20,7 @@ public class SpawnableObject
     public int PriorityWeight => priorityWeight;
     public Transform CachedTransform => cachedTransform;
 
-    public SpawnableObject(GameObject gameObject, SpawnableConfig.ObjectGroup objectGroup, float minPosX, float maxPosX, float minPosY, float maxPosY, int priorityWeight)
+    public SpawnableObject(GameObject gameObject, SpawnableObjectType objectGroup, float minPosX, float maxPosX, float minPosY, float maxPosY, int priorityWeight)
     {
         this.gameObject = gameObject;        
         this.objectGroup = objectGroup;

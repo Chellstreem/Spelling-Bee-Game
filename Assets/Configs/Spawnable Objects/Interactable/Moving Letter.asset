@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca6805341488149abe2496a632ac84, type: 3}
   m_Name: Moving Letter
   m_EditorClassIdentifier: 
-  objGroup: 2
+  objType: 0
   prefab: {fileID: 4997011247045342427, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
   minPosX: -1
   maxPosX: -1

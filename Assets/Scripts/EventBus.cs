@@ -1,35 +1,59 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventBus
-{        
-    public static event Action<string> OnLetterCollision;
-    public static void InvokeLetterCollision(string value) => OnLetterCollision?.Invoke(value);
+public class EventBus : IEventManager
+{
+    private Dictionary<Type, List<object>> subscribers;
 
-    //
+    public EventBus()
+    {
+        subscribers = new Dictionary<Type, List<object>>();        
+    }
 
-    public static event Action<bool> OnLetterChecked;
-    public static void InvokeLetterChecked(bool isCorrect) => OnLetterChecked?.Invoke(isCorrect);
+    public void Subscribe<T>(IEventSubscriber<T> subscriber) where T : IEvent
+    {
+        var eventType = typeof(T);
 
-    //
+        if (!subscribers.ContainsKey(eventType))
+        {
+            subscribers[eventType] = new List<object>();
+        }
 
-    public static event Action OnWordCompleted;
-    public static void InvokeWordCompleted() => OnWordCompleted?.Invoke();
+        subscribers[eventType].Add(subscriber);
+    }
 
-    //
+    public void Unsubscribe<T>(IEventSubscriber<T> subscriber) where T : IEvent
+    {
+        var eventType = typeof(T);
 
-    public static event Action OnVictory;
-    public static void InvokeVictory() => OnVictory?.Invoke();
+        if (subscribers.ContainsKey(eventType))
+        {
+            subscribers[eventType].Remove(subscriber);
 
-    //
+            if (subscribers[eventType].Count == 0)
+            {
+                subscribers.Remove(eventType);
+            }
+        }
+    }
 
-    public static event Action OnLoss;
-    public static void InvokeLoss() => OnLoss?.Invoke();
+    public void Publish<T>(T eventData) where T : IEvent
+    {
+        var eventType = typeof(T);
 
-    //
-    
-    public static event Action<GameObject> OnObjectReturnedToPool;
-    public static void InvokeReturnedToPool(GameObject obj) => OnObjectReturnedToPool?.Invoke(obj);
+        if (subscribers.ContainsKey(eventType))
+        {            
+            var subscribersCopy = new List<object>(subscribers[eventType]);
+
+            foreach (var subscriber in subscribersCopy)
+            {
+                if (subscriber is IEventSubscriber<T> typedSubscriber)
+                {
+                    typedSubscriber.OnEvent(eventData);
+                }
+            }
+        }
+    }
+
 }

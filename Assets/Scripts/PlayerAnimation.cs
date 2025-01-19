@@ -1,37 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using Zenject;
 
-public class PlayerAnimation : MonoBehaviour, IInitializable
+public class PlayerAnimation : MonoBehaviour, IEventSubscriber<OnLetterCollision>, IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>
 {
-    [SerializeField] private Animator animator;
+    private IEventManager eventManager;
+
+    private Animator animator;
     private Rigidbody rigidBody;
 
     int isDead = Animator.StringToHash("isDead");
     int isCollidedHash = Animator.StringToHash("isCollided");
     int isDancing = Animator.StringToHash("isDancing");
 
-    public void Initialize()
+    [Inject]
+    public void Construct(IEventManager eventManager)
     {
-        rigidBody = animator.gameObject.GetComponent<Rigidbody>();
-
-        EventBus.OnLetterCollision += Flinch;
-        EventBus.OnLoss += OnLoss;
-        EventBus.OnVictory += OnVictory;
+        this.eventManager = eventManager;
     }
 
-    private void OnLoss()
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        rigidBody = GetComponent<Rigidbody>();
+        
+        eventManager.Subscribe<OnLetterCollision>(this);
+        eventManager.Subscribe<OnDeath>(this);
+        eventManager.Subscribe<OnVictory>(this);
+    }
+
+    public void OnEvent(OnLetterCollision eventData) => Flinch();
+    
+    public void OnEvent(OnVictory eventData) => Dance();    
+
+    public void OnEvent(OnDeath eventData)
     {
         Die();
         ActivateGravity();
-    }
-
-    private void OnVictory() => Dance();    
+    }      
 
     private void Die() => animator.SetBool(isDead, true);       
     
-    private void Flinch(string letter) => animator.SetTrigger(isCollidedHash);
+    private void Flinch() => animator.SetTrigger(isCollidedHash);
 
     private void Dance() => animator.SetTrigger(isDancing);
 
@@ -39,9 +48,9 @@ public class PlayerAnimation : MonoBehaviour, IInitializable
 
     private void OnDestroy()
     {
-        EventBus.OnLetterCollision -= Flinch;
-        EventBus.OnLoss -= OnLoss;
-        EventBus.OnVictory -= OnVictory;
+        eventManager.Unsubscribe<OnLetterCollision>(this);
+        eventManager.Unsubscribe<OnDeath>(this);
+        eventManager.Unsubscribe<OnVictory>(this);
     }
 }
 

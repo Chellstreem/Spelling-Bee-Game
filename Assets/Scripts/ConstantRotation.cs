@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ConstantRotation : MonoBehaviour
 {
-    private const float Speed = 120f;
+    private float speed = 120;
+    public float Speed => speed;    
     
-    // Update is called once per frame
     void Update()
     {
         transform.Rotate(Vector3.up, Speed * Time.deltaTime);

@@ -1,22 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
-public class Taipan : MonoBehaviour
+namespace InteractableObjects
 {
-    private Animator animator;
-    int isBitten = Animator.StringToHash("isBitten");
-
-    private void Awake()
+    public class Taipan : InteractableObject
     {
-        animator = GetComponent<Animator>();
-    }
+        private IEventManager eventManager;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
+        private Animator animator;
+        private int isBitten = Animator.StringToHash("isBitten");
+
+        [Inject]
+        public void Construct(IEventManager eventManager)
         {
-            EventBus.InvokeLoss();
+            this.eventManager = eventManager;
+        }
+
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        protected override void OnPlayerCollision()
+        {
+            eventManager.Publish(new OnDeath());
             animator.SetTrigger(isBitten);
         }
     }

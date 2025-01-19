@@ -1,37 +1,57 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Zenject;
 
-public class MovableObject : MonoBehaviour
+namespace MovableObjects
 {
-    private Coroutine moveCoroutine;
-    protected const float ThresholdZ = -56f;
-
-    public virtual IEnumerator MoveCoroutine()
+    public class MovableObject : MonoBehaviour
     {
-        while (true)
+        protected IEventManager eventManager;
+        protected IParticlePlayer particlePlayer;
+        protected float speed;
+        protected float thresholdZ;
+
+        private Coroutine moveCoroutine;
+
+        [Inject]
+        public void Construct(GameConfig gameConfig, IEventManager eventManager, IParticlePlayer particlePlayer)
         {
-            transform.Translate(Vector3.back * GameplayData.speed * Time.deltaTime, Space.World);
-            if (transform.position.z <= ThresholdZ)
+            this.eventManager = eventManager;
+            this.particlePlayer = particlePlayer;
+            speed = gameConfig.Speed;
+            thresholdZ = gameConfig.ThresholdZ;
+        }
+
+        protected virtual IEnumerator MoveCoroutine()
+        {
+            while (true)
             {
-                StopMoving();
-                ReturnToPool();
+                transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World);
+                if (transform.position.z <= thresholdZ)
+                {
+                    StopMoving();
+                    ReturnToOriginalState();
+                }
+
+                yield return null;
+            }
+        }
+
+        public void StartMoving()
+        {
+            if (moveCoroutine == null) moveCoroutine = StartCoroutine(MoveCoroutine());
+        }
+
+        public void StopMoving()
+        {
+            if (moveCoroutine != null)
+            {
+                StopCoroutine(moveCoroutine);
             }
 
-            yield return null;
+            moveCoroutine = null;
         }
-    }
 
-    public void StartMoving()
-    {
-        if (moveCoroutine == null) moveCoroutine = StartCoroutine(MoveCoroutine());
+        protected virtual void ReturnToOriginalState() => eventManager.Publish(new OnReturnedToPool(gameObject));
     }
-
-    public void StopMoving()
-    {
-        if (moveCoroutine != null)
-            StopCoroutine(moveCoroutine);
-        moveCoroutine = null;
-    }
-
-    protected virtual void ReturnToPool() => EventBus.InvokeReturnedToPool(gameObject);
 }

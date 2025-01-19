@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca6805341488149abe2496a632ac84, type: 3}
   m_Name: Stem
   m_EditorClassIdentifier: 
-  objGroup: 1
+  objType: 1
   prefab: {fileID: 7124321258809887872, guid: 5cfda53db3324dc43a6bbd95efadcdb3, type: 3}
   minPosX: -5
   maxPosX: 0
   minPosY: 0.3
   maxPosY: 0.3
-  priorityWeight: 4
+  priorityWeight: 7

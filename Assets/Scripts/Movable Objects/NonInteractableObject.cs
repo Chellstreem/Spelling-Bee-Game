@@ -1,30 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 
-public class NonInteractableObject : MovableObject
+namespace MovableObjects
 {
-    private void OnEnable()
+    public class NonInteractableObject : MovableObject, IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>
     {
-        StartMoving();
+        private void OnEnable()
+        {
+            StartMoving();
 
-        EventBus.OnLoss += StopMoving;
-        EventBus.OnVictory += StopMoving;
-        
-    }
+            eventManager.Subscribe<OnDeath>(this);
+            eventManager.Subscribe<OnVictory>(this);
+        }
 
-    private void OnDisable()
-    {
-        StopMoving();   
+        private void OnDisable()
+        {
+            StopMoving();
 
-        EventBus.OnLoss -= StopMoving;
-        EventBus.OnVictory -= StopMoving;
-    }
+            eventManager.Unsubscribe<OnDeath>(this);
+            eventManager.Unsubscribe<OnVictory>(this);
+        }
 
-    private void OnDestroy()
-    {
-        EventBus.OnLoss -= StopMoving;
-        EventBus.OnVictory -= StopMoving;
+        private void OnDestroy()
+        {
+            eventManager.Unsubscribe<OnDeath>(this);
+            eventManager.Unsubscribe<OnVictory>(this);
+        }
+
+        public void OnEvent(OnVictory eventData) => StopMoving();
+
+        public void OnEvent(OnDeath eventData) => StopMoving();
     }
 }

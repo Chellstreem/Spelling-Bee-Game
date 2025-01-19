@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ca6805341488149abe2496a632ac84, type: 3}
   m_Name: Red Flower
   m_EditorClassIdentifier: 
-  objGroup: 1
+  objType: 1
   prefab: {fileID: 6082721139736869318, guid: ebb6791f3fdcc5748ac6e8e3ea5fd7b5, type: 3}
   minPosX: -5
   maxPosX: 0
   minPosY: 0
   maxPosY: 0
-  priorityWeight: 5
+  priorityWeight: 7

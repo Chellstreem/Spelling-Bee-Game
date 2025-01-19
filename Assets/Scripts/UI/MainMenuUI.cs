@@ -44,8 +44,8 @@ public class MainMenuUI : MonoBehaviour
             return;
         }
 
-        GameplayData.savedWords = savedWords;
-        GameplayData.speed = (difficultyToggle.toggle.isOn ? fastSpeed : normalSpeed);
+        GameplayData.SavedWords = savedWords;
+        GameplayData.Speed = (difficultyToggle.toggle.isOn ? fastSpeed : normalSpeed);
 
         SceneManager.LoadScene(2);
     }

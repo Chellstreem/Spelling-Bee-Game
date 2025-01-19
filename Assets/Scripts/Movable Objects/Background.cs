@@ -1,36 +1,49 @@
 using UnityEngine;
 using System.Collections;
 
-public class Background : MovableObject
-{    
-    private Vector3 startPosition;
-
-    void Start()
+namespace MovableObjects
+{
+    public class Background : MovableObject, IEventSubscriber<OnMovingStarted>, IEventSubscriber<OnMovingStopped>
     {        
-        startPosition = transform.position;
+        private Vector3 startPosition;        
 
-        MovingState.OnMovingStarted += StartMoving;
-        MovingState.OnMovingStopped += StopMoving;
-    }    
-
-    public override IEnumerator MoveCoroutine()
-    {
-        while (true)
+        private void Awake()
         {
-            transform.Translate(Vector3.right * GameplayData.speed * Time.deltaTime);
+            startPosition = transform.position;
 
-            if (transform.position.z < ThresholdZ)
-            {
-                transform.position = startPosition;
-            }
-
-            yield return null;
+            eventManager.Subscribe<OnMovingStarted>(this);
+            eventManager.Subscribe<OnMovingStopped>(this);            
         }
-    }
 
-    private void OnDestroy()
-    {
-        MovingState.OnMovingStarted -= StartMoving;
-        MovingState.OnMovingStopped -= StopMoving;
+        protected override IEnumerator MoveCoroutine()
+        {
+            while (true)
+            {
+                transform.Translate(Vector3.right * speed * Time.deltaTime);
+
+                if (transform.position.z < thresholdZ)
+                {
+                    transform.position = startPosition;
+                }
+
+                yield return null;
+            }
+        }
+
+        public void OnEvent(OnMovingStarted eventData)
+        {
+            StartMoving();
+        }
+
+        public void OnEvent(OnMovingStopped eventData)
+        {
+            StopMoving();
+        }
+
+        private void OnDestroy()
+        {
+            eventManager.Unsubscribe<OnMovingStarted>(this);
+            eventManager.Unsubscribe<OnMovingStopped>(this);
+        }
     }
 }
