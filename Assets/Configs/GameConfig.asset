@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56792b09d0a6c634c967c07a0d96ac4a, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  coroutineRunnerObj: {fileID: 4520891139683978200, guid: 0b714f09c2057b748a7d6340811d93c5, type: 3}
+  speed: 20
+  playerPrefab: {fileID: 3191624550175880182, guid: e0763cdeb3aea7740842ec6cb95054c3, type: 3}
+  moveDistance: 5
+  moveSpeed: 25
+  positionThreshold: 0.001
+  playerPosition: {x: -1.33, y: 0, z: -42.74}
+  backgroundPrefab: {fileID: 5121448371004466282, guid: 2b94b6073610e2f4ea39bc54c9194f21, type: 3}
+  backgroundPosition: {x: -6.12, y: 9.5, z: 0.68}
+  thresholdZ: -56
+  spawnPosition: {x: 0, y: 0, z: 0}
+  decorativeSpawnFrequency: 0.65
+  interactableSpawnFrequency: 0.5
+  maskedLetterThreshold: 5
+  maskedLetterMinNum: 1
+  maskedLetterMaxNum: 2
+  extraLettersCount: 7
+  availableLetters: abcdefghijklmnopqrstuvwxyz
+  count: 3
+  fontSize: 320
+  fontSizeDecrement: 45
+  finalFontSize: 350
+  missileSpeed: 45
+  missileSpawnFrequency: 0.5
