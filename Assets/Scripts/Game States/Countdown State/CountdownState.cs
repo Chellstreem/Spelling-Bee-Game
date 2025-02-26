@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace GameStates
@@ -13,13 +12,13 @@ namespace GameStates
         private readonly int count;
         private readonly int fontSize;
         private readonly int fontSizeDecrement;
-        private readonly int finalFontSize;
+        private readonly int finalFontSize;        
 
-        public CountdownState(IStateSwitcher stateSwitcher, IEventManager eventManager, ICoroutineRunnerHolder runnerHolder, GameConfig gameConfig)
+        public CountdownState(IStateSwitcher stateSwitcher, IEventManager eventManager, ICoroutineRunnerProvider runnerProvider, GameConfig gameConfig)
         {
             this.stateSwitcher = stateSwitcher;
             this.eventManager = eventManager;
-            coroutineRunner = runnerHolder.CoroutineRunner;
+            coroutineRunner = runnerProvider.GetCoroutineRunner();
 
             count = gameConfig.Count;
             fontSize = gameConfig.FontSize;
@@ -29,8 +28,8 @@ namespace GameStates
 
         public void Enter()
         {
-            eventManager.Publish(new OnCountdownEnter());
-            coroutineRunner.StartCor(CountDown(count, fontSize, finalFontSize));
+            eventManager.Publish(new OnCountdownStateEnter());
+            coroutineRunner.StartCor(CountDown(count, fontSize, finalFontSize));            
         }
 
         private IEnumerator CountDown(int count, int fontSize, int finalFontSize)
@@ -48,7 +47,7 @@ namespace GameStates
 
         public void Exit()
         {            
-            eventManager.Publish(new OnCountdownExit());
+            eventManager.Publish(new OnCountdownStateExit());
         }
     }
 }

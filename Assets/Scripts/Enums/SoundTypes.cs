@@ -5,7 +5,12 @@ public enum SoundType
     Pick,
     SnakeRattle,
     Willhelm,
+    MissileExplosion,
     GamePlayMusic,
-    Victory,
-    Loss
+    Victory,    
+    Whoosh,
+    SadTrombone,
+    MissileLockOn,
+    Earthquake,
+    TomScream
 }

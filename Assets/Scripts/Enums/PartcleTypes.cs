@@ -1,10 +1,13 @@
-public enum ParticleType
+namespace Particles
 {
-    ArcadeSpark,
-    BasicSpark,
-    BirthdaySpark,
-    BirthdayConfetti,
-    ConfettiRain,
-    SoulEscape,
-    MissileExplosion
+    public enum ParticleType
+    {
+        ArcadeSpark,
+        BasicSpark,
+        BirthdaySpark,
+        BirthdayConfetti,
+        ConfettiRain,
+        SoulEscape,
+        MissileExplosion
+    }
 }

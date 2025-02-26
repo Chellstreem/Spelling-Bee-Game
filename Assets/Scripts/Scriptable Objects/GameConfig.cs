@@ -4,26 +4,26 @@
 public class GameConfig : ScriptableObject
 {
     [Header("General Config")]
-    [SerializeField] private GameObject coroutineRunnerObj;
+    [SerializeField] private GameObject coroutineRunnerPrefab;
     [SerializeField] private float speed = 20f;
 
-    public GameObject CoroutineRunnerObj => coroutineRunnerObj;
+    public GameObject CoroutineRunnerPrefab => coroutineRunnerPrefab;
     public float Speed => speed;
 
     //
 
     [Header("Player Movement Config")]
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private float moveDistance = 5f;
+    [SerializeField] private Vector3 lowerPlayerPosition;
+    [SerializeField] private Vector3 upperPlayerPosition;    
     [SerializeField] private float moveSpeed = 25f;
-    [SerializeField] private float positionThreshold = 0.001f;
-    [SerializeField] private Vector3 playerPosition;
+    [SerializeField] private float positionThreshold = 0.001f;    
 
     public GameObject PlayerPrefab => playerPrefab;
-    public float MoveDistance => moveDistance;
+    public Vector3 LowerPlayerPosition => lowerPlayerPosition;
+    public Vector3 UpperPlayerPosition => upperPlayerPosition;    
     public float MoveSpeed => moveSpeed;
-    public float PositionThreshold => positionThreshold;
-    public Vector3 PlayerPosition => playerPosition;
+    public float PositionThreshold => positionThreshold;    
 
     //
 
@@ -85,7 +85,11 @@ public class GameConfig : ScriptableObject
     [Header("Missle Config")]
     [SerializeField] private float missileSpeed = 30f;
     [SerializeField] private float missileSpawnFrequency = 0.5f;
+    [SerializeField] private float delayBeforeLaunching = 2f;
+    [SerializeField] private float missileSateDuration = 3.5f;
 
     public float MissileSpeed => missileSpeed;
     public float MissileSpawnFrequency => missileSpawnFrequency;
+    public float DelayBeforeLaunching => delayBeforeLaunching;
+    public float MissileSateDuration => missileSateDuration;
 }

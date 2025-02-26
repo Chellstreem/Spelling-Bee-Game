@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Zenject;
+using Particles;
 
 namespace MovableObjects
 {
@@ -26,7 +27,7 @@ namespace MovableObjects
         {
             while (true)
             {
-                transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World);
+                transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World); // пофиксить скорость
                 if (transform.position.z <= thresholdZ)
                 {
                     StopMoving();
@@ -52,6 +53,6 @@ namespace MovableObjects
             moveCoroutine = null;
         }
 
-        protected virtual void ReturnToOriginalState() => eventManager.Publish(new OnReturnedToPool(gameObject));
+        protected virtual void ReturnToOriginalState() => eventManager.Publish(new OnReturnedToPool(gameObject));        
     }
 }

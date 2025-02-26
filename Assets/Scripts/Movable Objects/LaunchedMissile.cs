@@ -1,4 +1,7 @@
-using Zenject;
+﻿using Zenject;
+using Particles;
+using UnityEngine;
+using System.Collections;
 
 namespace MovableObjects
 {
@@ -11,6 +14,21 @@ namespace MovableObjects
             this.particlePlayer = particlePlayer;
             speed = gameConfig.MissileSpeed;
             thresholdZ = gameConfig.ThresholdZ;
+        }
+         
+        protected override IEnumerator MoveCoroutine()
+        {
+            while (true)
+            {
+                transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World); 
+                if (transform.position.z <= thresholdZ)
+                {
+                    StopMoving();
+                    ReturnToOriginalState();
+                }
+
+                yield return null;
+            }
         }
 
         private void OnEnable() => StartMoving();       

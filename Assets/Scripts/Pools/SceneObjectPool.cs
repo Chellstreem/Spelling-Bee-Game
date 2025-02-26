@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Pools
 {
-    public class SceneObjectPool : IPoolInitializable, ISceneObjectProvider
+    public class SceneObjectPool : ISceneObjectProvider
     {
         private SceneObjectCollection collection;
         private Dictionary<SceneObjectType, GameObject[]> poolDictionary;

@@ -11,11 +11,11 @@ namespace Spawn
 
         private Coroutine spawnCoroutine;
 
-        public DecorativeObjectSpawner(ISpawnableObjectProvider objectPool, ICoroutineRunnerHolder runnerHolder, GameConfig gameConfig)
+        public DecorativeObjectSpawner(ISpawnableObjectProvider objectPool, ICoroutineRunnerProvider runnerRunner, GameConfig gameConfig)
         {
             spawnFrequency = gameConfig.DecorativeSpawnFrequency;
             this.objectPool = objectPool;            
-            coroutineRunner = runnerHolder.CoroutineRunner;
+            coroutineRunner = runnerRunner.GetCoroutineRunner();
             spawnPosition = gameConfig.SpawnPosition;
         }
 

@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 
-
 public class CoroutineRunner : MonoBehaviour, ICoroutineRunner
 {
     public Coroutine StartCor(IEnumerator coroutine)

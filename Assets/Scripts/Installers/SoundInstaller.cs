@@ -1,5 +1,6 @@
 using Zenject;
 using Sounds;
+using System;
 
 public class SoundInstaller : Installer
 {
@@ -9,7 +10,7 @@ public class SoundInstaller : Installer
         Container.Bind<ISoundEffectPlayer>().To<SoundEffectPlayer>().AsSingle();
         Container.Bind<IMusicPlayer>().To<MusicPlayer>().AsSingle();
 
-        Container.Bind<SoundEffectHandler>().AsSingle().NonLazy();
+        Container.Bind<SoundEffectBehaviour>().AsSingle().NonLazy();
         Container.Bind<MusicHandler>().AsSingle().NonLazy();
     }
 }

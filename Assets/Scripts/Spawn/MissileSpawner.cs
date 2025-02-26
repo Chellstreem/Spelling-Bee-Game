@@ -1,20 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MissileSpawner : Spawner, ISpawner
 {
     private ISpawnableObjectProvider objectPool;
     private ICoroutineRunner coroutineRunner;
-    private Vector3 spawnPosition;    
-    
-    private Coroutine spawnCoroutine;
-    private bool isMinPosY = false; // Флаг для отслеживания, какое значение Y использовать
+    private Vector3 spawnPosition;
+    private readonly float delayBeforeLaunching;
 
-    public MissileSpawner(ISpawnableObjectProvider objectPool, ICoroutineRunnerHolder runnerHolder, GameConfig gameConfig)
+    private Coroutine spawnCoroutine;    
+
+    public MissileSpawner(ISpawnableObjectProvider objectPool, ICoroutineRunnerProvider runnerProvider, GameConfig gameConfig)
     {        
         this.objectPool = objectPool;
-        coroutineRunner = runnerHolder.CoroutineRunner;
+        coroutineRunner = runnerProvider.GetCoroutineRunner();
         spawnPosition = gameConfig.SpawnPosition;
         spawnFrequency = gameConfig.MissileSpawnFrequency;
+        delayBeforeLaunching = gameConfig.DelayBeforeLaunching;
     }
 
     public override void StartSpawning()
@@ -32,13 +34,26 @@ public class MissileSpawner : Spawner, ISpawner
             coroutineRunner.StopCor(spawnCoroutine);
             spawnCoroutine = null;
         }
-    }    
+    }
+
+    protected override IEnumerator SpawnObjects(SpawnableObjectType objType, float spawnFrequency)
+    {
+        yield return new WaitForSeconds(delayBeforeLaunching);
+        while (true)
+        {
+            SpawnableObject spawnObject = GetObject(objType);
+            GameObject obj = spawnObject.GameObject;
+            spawnObject.CachedTransform.position = GetPosition(spawnObject);
+            obj.SetActive(true);
+            yield return new WaitForSeconds(spawnFrequency);
+        }
+    }
 
     protected override Vector3 GetPosition(SpawnableObject spawnObject)
     {
         float z = spawnPosition.z;
-        float x = Random.Range(spawnObject.MinPosX, spawnObject.MaxPosX);
-        float y = GetNextYPosition(spawnObject);
+        float x = spawnObject.MinPosX;
+        float y = (Random.value < 0.5f ? spawnObject.MinPosY : spawnObject.MaxPosY);
 
         return new Vector3(x, y, z);
     }
@@ -46,17 +61,5 @@ public class MissileSpawner : Spawner, ISpawner
     protected override SpawnableObject GetObject(SpawnableObjectType objType)
     {
         return objectPool.GetObject(objType);
-    }
-
-    private float GetNextYPosition(SpawnableObject spawnObject)
-    {
-        if (!isMinPosY && Random.value < 0.5f)
-        {
-            isMinPosY = true;
-        }
-        float y = isMinPosY ? spawnObject.MinPosY : spawnObject.MaxPosY;        
-        isMinPosY = !isMinPosY;
-
-        return y;
-    }
+    }    
 }

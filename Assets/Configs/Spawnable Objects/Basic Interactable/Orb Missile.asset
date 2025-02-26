@@ -18,4 +18,4 @@ MonoBehaviour:
   maxPosX: -1
   minPosY: 2.5
   maxPosY: 8
-  priorityWeight: 2
+  priorityWeight: 4

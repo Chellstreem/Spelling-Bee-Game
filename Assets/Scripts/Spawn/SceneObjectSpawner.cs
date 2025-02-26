@@ -3,7 +3,7 @@ using Pools;
 
 namespace Spawn
 {
-    public class SceneObjectSpawner : IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>
+    public class SceneObjectSpawner : IEventSubscriber<OnVictory>, IEventSubscriber<OnBeingDamaged>
     {
         private ISceneObjectProvider sceneObjectProvider;
         private IEventManager eventManager;
@@ -14,7 +14,7 @@ namespace Spawn
             this.eventManager = eventManager;
 
             eventManager.Subscribe<OnVictory>(this);
-            eventManager.Subscribe<OnDeath>(this);
+            eventManager.Subscribe<OnBeingDamaged>(this);
         }
 
         public void OnEvent(OnVictory eventData)
@@ -23,7 +23,7 @@ namespace Spawn
             ToggleObjectActivation(victoryObjects, true);
         }
 
-        public void OnEvent(OnDeath eventData)
+        public void OnEvent(OnBeingDamaged eventData)
         {
             GameObject[] lossObjects = sceneObjectProvider.GetObjects(SceneObjectType.lossObject);
             ToggleObjectActivation(lossObjects, true);
@@ -38,7 +38,7 @@ namespace Spawn
         private void OnDestroy()
         {
             eventManager.Unsubscribe<OnVictory>(this);
-            eventManager.Unsubscribe<OnDeath>(this);
+            eventManager.Unsubscribe<OnBeingDamaged>(this);
         }
     }
 }

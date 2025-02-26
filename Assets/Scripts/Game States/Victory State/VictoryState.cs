@@ -7,10 +7,18 @@ namespace GameStates
     public class VictoryState : IGameState
     {
         private IStateSwitcher stateSwitcher;
+        private IEventManager eventManager;
 
-        public VictoryState(IStateSwitcher stateSwitcher) => this.stateSwitcher = stateSwitcher;
+        public VictoryState(IStateSwitcher stateSwitcher, IEventManager eventManager)
+        {
+            this.stateSwitcher = stateSwitcher;
+            this.eventManager = eventManager;
+        }
 
-        public void Enter() { }
+        public void Enter()
+        {
+            eventManager.Publish(new OnVictoryStateEnter());
+        }
 
         public void Exit() { }
     }

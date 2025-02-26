@@ -1,26 +1,35 @@
 using UnityEngine;
 using Zenject;
 
-public class Instantiator : IPlayerHolder, ICoroutineRunnerHolder
+public class Instantiator : IPlayerGetter, ICoroutineRunnerProvider, ICameraProvider
 {
-    private DiContainer container;
+    private DiContainer container;    
 
-    public ICoroutineRunner CoroutineRunner {  get; }   
-    public GameObject Player { get; }
-    public GameObject Background { get; }    
+    public ICoroutineRunner CoroutineRunner { get; private set; }   
+    public GameObject Player { get; private set;  }
+    public UnityEngine.Camera MainCamera { get; private set; }
 
-    public Instantiator(GameConfig gameConfig, DiContainer container)
+    public Instantiator(DiContainer container, GameConfig gameConfig, CameraConfig cameraConfig)
     {
         this.container = container;
 
-        Player = InstantiateObject(gameConfig.PlayerPrefab, gameConfig.PlayerPosition);        
-        CoroutineRunner = Object.Instantiate(gameConfig.CoroutineRunnerObj).GetComponent<ICoroutineRunner>();
-    }
+        Player = CreateObject(gameConfig.PlayerPrefab, gameConfig.LowerPlayerPosition, Quaternion.identity);
+        CoroutineRunner = container.InstantiatePrefabForComponent<ICoroutineRunner>(gameConfig.CoroutineRunnerPrefab);
+        MainCamera = container.InstantiatePrefabForComponent<UnityEngine.Camera>(cameraConfig.CameraPrefab);
+    }    
 
-    private GameObject InstantiateObject(GameObject prefab, Vector3 position)
+    public GameObject GetPlayer() => Player;
+
+    public ICoroutineRunner GetCoroutineRunner() => CoroutineRunner;
+    
+    public UnityEngine.Camera GetMainCamera() => MainCamera;  
+
+    private GameObject CreateObject(GameObject prefab, Vector3 position, Quaternion rotation)
     {
         GameObject obj = container.InstantiatePrefab(prefab);
         obj.transform.position = position;
+        obj.transform.rotation = rotation;
         return obj;
-    }
-}
+    }    
+} 
+

@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public interface IParticlePlayer
+namespace Particles
 {
-    public void PlayParticle(ParticleType particleType, Vector3 position);
+    public interface IParticlePlayer
+    {
+        public void PlayParticle(ParticleType particleType, Vector3 position);
+    }
 }

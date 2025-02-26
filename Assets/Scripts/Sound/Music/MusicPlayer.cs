@@ -4,13 +4,13 @@ namespace Sounds
 {
     public class MusicPlayer : IMusicPlayer
     {
-        private readonly AudioSource audioSource;
         private readonly ISoundLibrary library;
+        private AudioSource audioSource;        
 
         public MusicPlayer(ISoundLibrary library)
         {
-            audioSource = new GameObject("MusicPlayer").AddComponent<AudioSource>();
             this.library = library;
+            CreateAudioSource();            
         }
 
         public void PlaySound(SoundType soundType)
@@ -33,6 +33,12 @@ namespace Sounds
         public void StopSound()
         {
             if (audioSource.isPlaying) audioSource.Stop();
+        }
+
+        private void CreateAudioSource()
+        {
+            audioSource = new GameObject("MusicPlayer").AddComponent<AudioSource>();
+            audioSource.loop = true;
         }
     }
 }

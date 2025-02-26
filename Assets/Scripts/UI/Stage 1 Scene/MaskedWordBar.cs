@@ -1,54 +1,66 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
-public class MaskedWordBar : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSubscriber<OnLetterChecked>, IEventSubscriber<OnWordCompleted>
+public class MaskedWordBar : MonoBehaviour, IEventSubscriber<OnVictoryStateEnter>, IEventSubscriber<OnLetterChecked>
 {
-    [SerializeField] private TextMeshProUGUI text;
     private IEventManager eventManager;
-    private const string VictoryMessage = "YOU DID IT!";
+    private IMaskedWordGetter maskedWordGetter;
+
+    private readonly string victoryMessage = "YOU DID IT!";
+    private readonly float delayBeforeVictoryMessage = 1f;
+
+    private TextMeshProUGUI text;
 
     [Inject]
-    public void Construct(IEventManager eventManager)
+    public void Construct(IEventManager eventManager, IMaskedWordGetter maskedWordGetter)
     {
-        this.eventManager = eventManager;        
+        this.eventManager = eventManager;
+        this.maskedWordGetter = maskedWordGetter;
     }
 
-    private void Start()
+    private void Awake()
     {
-        UpdateMaskedWord();
+        text = GetComponent<TextMeshProUGUI>();
+
+        UpdateText();
         SubscribeToEvents();
     }
 
-    public void OnEvent(OnVictory eventData)
+    public void OnEvent(OnVictoryStateEnter eventData)
     {
-        text.text = VictoryMessage;
+        StartCoroutine(UpdateVictoryMessageWithDelay(delayBeforeVictoryMessage));        
     }
 
     public void OnEvent(OnLetterChecked eventData)
     {
-        UpdateMaskedWord();
+        if (eventData.IsCorrect)
+            UpdateText();
     }
 
-    public void OnEvent(OnWordCompleted eventData)
+    private void UpdateText()
     {
-        UpdateMaskedWord();
-    }
-
-    private void UpdateMaskedWord() => text.text = LetterCollisionHandler.MaskedWord.ToUpper();
+        text.text = maskedWordGetter.GetMaskedWord().ToUpper();        
+    }        
 
     private void SubscribeToEvents()
     {
         eventManager.Subscribe<OnLetterChecked>(this);
-        eventManager.Subscribe<OnVictory>(this);
-        eventManager.Subscribe<OnWordCompleted>(this);
+        eventManager.Subscribe<OnVictoryStateEnter>(this);
     }
 
     private void UnsubscribeFromEvents()
-    {
+    {        
         eventManager.Unsubscribe<OnLetterChecked>(this);
-        eventManager.Unsubscribe<OnVictory>(this);
-        eventManager.Unsubscribe<OnWordCompleted>(this);
+        eventManager.Unsubscribe<OnVictoryStateEnter>(this);
+    }
+
+    private IEnumerator UpdateVictoryMessageWithDelay(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        text.text = victoryMessage;
     }
 
     private void OnDestroy()

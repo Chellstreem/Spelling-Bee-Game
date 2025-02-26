@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CurrentWordHandler : ICurrentWordHandler, IIndexGetter
+public class CurrentWordHandler : ICurrentWordHandler, ICurrentIndexGetter, ICurrentWordGetter
 {
     private List<string> words;
     private int currentWordIndex;
@@ -18,7 +18,7 @@ public class CurrentWordHandler : ICurrentWordHandler, IIndexGetter
 
     public void MoveToNextWord() => currentWordIndex++;       
 
-    public bool IsCurrentIndexValid() => currentWordIndex < words.Count;   
+    public bool IsCurrentIndexLast() => currentWordIndex == words.Count - 1;   
 
     public int GetTotalWords() => words.Count;    
 }

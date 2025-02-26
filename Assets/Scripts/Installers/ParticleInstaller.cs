@@ -1,5 +1,5 @@
 using Zenject;
-using Particle;
+using Particles;
 
 public class ParticleInstaller : Installer
 {

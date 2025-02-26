@@ -1,54 +1,52 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class PlayerMovement : IHorizontalMovement, IVerticalMovement, IDeathInvoker
+namespace PlayerMobility
 {
-    private IEventManager eventManager;
-    private GameObject player;
-    private float moveDistance;
-    private float moveSpeed;
-    private float positionThreshold;
-    private Vector3 originalPosition;
-    
-    private Vector3 targetPosition;
-    private bool isMoving;
-
-    public PlayerMovement(GameConfig gameConfig, IEventManager eventManager, IPlayerHolder playerHolder)
+    public class PlayerMovement : IPlayerMover
     {
-        this.eventManager = eventManager;
-        moveDistance = gameConfig.MoveDistance;
-        moveSpeed = gameConfig.MoveSpeed;
-        positionThreshold = gameConfig.PositionThreshold;
-        originalPosition = gameConfig.PlayerPosition;
-        player = playerHolder.Player;              
-    }
+        private readonly ICoroutineRunner coroutineRunner;
+        private readonly Transform playerTransform;
+        private readonly Vector3 lowerPosition;
+        private readonly Vector3 upperPosition;
+        private readonly float moveSpeed;
+        private readonly float positionThreshold;
 
-    public void GoUp() => SetTargetPosition(Vector3.up * moveDistance);
+        private Vector3 currentPosition;
+        private Coroutine moveCoroutine;
 
-    public void GoDown() => SetTargetPosition(Vector3.zero);    
-
-    public void Move()
-    {
-        if (isMoving)
+        public PlayerMovement(ICoroutineRunnerProvider runnerProvider, IPlayerGetter playerGetter, GameConfig gameConfig)
         {
-            if ((player.transform.position - targetPosition).sqrMagnitude < positionThreshold)
-            {
-                player.transform.position = targetPosition;
-                isMoving = false;
-            }
-            else
-            {
-                player.transform.position = Vector3.MoveTowards(player.transform.position,
-                    targetPosition, moveSpeed * Time.deltaTime);
-            }                
+            coroutineRunner = runnerProvider.GetCoroutineRunner();
+            playerTransform = playerGetter.GetPlayer().transform;
+            lowerPosition = gameConfig.LowerPlayerPosition;
+            upperPosition = gameConfig.UpperPlayerPosition;
+            moveSpeed = gameConfig.MoveSpeed;
+            positionThreshold = gameConfig.PositionThreshold;
         }
-    }
 
-    public void InvokeDeath() => eventManager.Publish(new OnDeath());
+        public void GoUp() => MoveTo(upperPosition);
 
-    private void SetTargetPosition(Vector3 offset)
-    {
-        targetPosition = originalPosition + offset;
-        isMoving = true;
+        public void GoDown() => MoveTo(lowerPosition);
+
+        private IEnumerator MoveCoroutine(Vector3 targetPosition)
+        {
+            while ((playerTransform.position - targetPosition).sqrMagnitude > positionThreshold)
+            {
+                playerTransform.position = Vector3.MoveTowards(playerTransform.position,
+                    targetPosition, moveSpeed * Time.deltaTime);
+                yield return null;
+            }
+
+            playerTransform.position = targetPosition;
+        }
+
+        private void MoveTo(Vector3 position)
+        {
+            if (currentPosition == position) return;
+            if (moveCoroutine != null) coroutineRunner.StopCor(moveCoroutine);
+            moveCoroutine = coroutineRunner.StartCor(MoveCoroutine(position));
+            currentPosition = position;
+        }
     }
 }

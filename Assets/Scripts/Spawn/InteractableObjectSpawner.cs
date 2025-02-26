@@ -11,11 +11,11 @@ namespace Spawn
 
         private Coroutine spawnCoroutine;
 
-        public InteractableObjectSpawner(ISpawnableObjectProvider objectPool, ICoroutineRunnerHolder runnerHolder, GameConfig gameConfig)
+        public InteractableObjectSpawner(ISpawnableObjectProvider objectPool, ICoroutineRunnerProvider runnerProvider, GameConfig gameConfig)
         {
             spawnFrequency = gameConfig.InteractableSpawnFrequency;
             this.objectPool = objectPool;
-            coroutineRunner = runnerHolder.CoroutineRunner;
+            coroutineRunner = runnerProvider.GetCoroutineRunner();
             spawnPosition = gameConfig.SpawnPosition;
         }
 

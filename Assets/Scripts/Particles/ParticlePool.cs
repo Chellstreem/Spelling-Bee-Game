@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Particle
+namespace Particles
 {
-    public class ParticlePool : IPoolInitializable, IParticlePool
+    public class ParticlePool : IParticlePool
     {
         private ParticleCollection particleCollection;
 
@@ -15,9 +15,26 @@ namespace Particle
             this.particleCollection = particleCollection;
 
             InitializePools();
+        }        
+
+        public ParticleSystem GetParticle(ParticleType particleType)
+        {
+            if (!poolDictionary.ContainsKey(particleType) || poolDictionary[particleType].Count == 0)
+            {
+                Debug.LogWarning($"Партикл типа {particleType} не найден.");
+                return null;
+            }
+
+            ParticleSystem particle = poolDictionary[particleType].Dequeue();
+            return particle;
         }
 
-        public void InitializePools()
+        public void ReturnParticle(ParticleType particleType, ParticleSystem particle)
+        {
+            poolDictionary[particleType].Enqueue(particle);
+        }
+
+        private void InitializePools()
         {
             poolDictionary = new Dictionary<ParticleType, Queue<ParticleSystem>>();
 
@@ -39,23 +56,6 @@ namespace Particle
                     poolDictionary[particleType].Enqueue(obj.GetComponent<ParticleSystem>());
                 }
             }
-        }
-
-        public ParticleSystem GetParticle(ParticleType particleType)
-        {
-            if (!poolDictionary.ContainsKey(particleType) || poolDictionary[particleType].Count == 0)
-            {
-                Debug.LogWarning($"Партикл типа {particleType} не найден.");
-                return null;
-            }
-
-            ParticleSystem particle = poolDictionary[particleType].Dequeue();
-            return particle;
-        }
-
-        public void ReturnParticle(ParticleType particleType, ParticleSystem particle)
-        {
-            poolDictionary[particleType].Enqueue(particle);
         }
     }
 }

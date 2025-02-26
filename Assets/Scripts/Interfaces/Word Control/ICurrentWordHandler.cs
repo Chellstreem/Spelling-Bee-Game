@@ -4,5 +4,5 @@ public interface ICurrentWordHandler
 
     public void MoveToNextWord();
 
-    public bool IsCurrentIndexValid();
+    public bool IsCurrentIndexLast();
 }

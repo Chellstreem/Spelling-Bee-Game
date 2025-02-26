@@ -7,14 +7,15 @@ TagManager:
   - Letter
   - Birds
   - Background
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Background
   - Water
   - UI
-  - 
+  - Whoosh Detector
   - 
   - 
   - 

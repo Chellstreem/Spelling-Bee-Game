@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using Zenject;
 
-public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>, IEventSubscriber<OnCountdownEnter>, IEventSubscriber<OnCountdownExit>
+public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSubscriber<OnBeingDamaged>,
+    IEventSubscriber<OnCountdownStateEnter>, IEventSubscriber<OnCountdownStateExit>, IEventSubscriber<OnMissileStateEnter>,
+    IEventSubscriber<OnMissileStateExit>
 {
     private IEventManager eventManager;
 
     [SerializeField] public GameObject gameOverMenu;       
     [SerializeField] public GameObject countdownBar;       
+    [SerializeField] public GameObject missileAlertBar;       
 
     [Inject]
     public void Construct(IEventManager eventManager)
@@ -18,34 +21,39 @@ public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSub
     private void SubscribeToEvents()
     {
         eventManager.Subscribe<OnVictory>(this);
-        eventManager.Subscribe<OnDeath>(this);
-        eventManager.Subscribe<OnCountdownEnter>(this);
-        eventManager.Subscribe<OnCountdownExit>(this);
+        eventManager.Subscribe<OnBeingDamaged>(this);
+        eventManager.Subscribe<OnCountdownStateEnter>(this);
+        eventManager.Subscribe<OnCountdownStateExit>(this);
+        eventManager.Subscribe<OnMissileStateEnter>(this);
+        eventManager.Subscribe<OnMissileStateExit>(this);
     }
     
     public void OnEvent(OnVictory eventData) => ShowGameOverMenu();
 
-    public void OnEvent(OnDeath eventData) => ShowGameOverMenu(); 
+    public void OnEvent(OnBeingDamaged eventData) => ShowGameOverMenu(); 
     
-    public void OnEvent(OnCountdownEnter eventData) => ActivateCountdownBar(); 
+    public void OnEvent(OnCountdownStateEnter eventData) => ToggleCountdownBarActivation(true); 
     
-    public void OnEvent(OnCountdownExit eventData) => DeactivateCountdownBar();          
+    public void OnEvent(OnCountdownStateExit eventData) => ToggleCountdownBarActivation(false);
+
+    public void OnEvent(OnMissileStateEnter eventData) => ToggleMissileAlertBarActivation(true);
+
+    public void OnEvent(OnMissileStateExit eventData) => ToggleMissileAlertBarActivation(false);
 
     private void ShowGameOverMenu() => gameOverMenu.SetActive(true);
 
-    private void ActivateCountdownBar()
-    {
-        countdownBar.SetActive(true);        
-    }    
-
-    private void DeactivateCountdownBar() => countdownBar.SetActive(false);
+    private void ToggleCountdownBarActivation(bool isActivated) => countdownBar.SetActive(isActivated);    
+    
+    private void ToggleMissileAlertBarActivation(bool isActivated) => missileAlertBar.SetActive(isActivated);     
 
     private void UnsubscribeFromEvents()
     {
-        eventManager.Unsubscribe<OnVictory>(this);
-        eventManager.Unsubscribe<OnDeath>(this);
-        eventManager.Unsubscribe<OnCountdownEnter>(this);
-        eventManager.Unsubscribe<OnCountdownExit>(this);
+        eventManager.Unsubscribe<OnVictory>(this); 
+        eventManager.Unsubscribe<OnBeingDamaged>(this);
+        eventManager.Unsubscribe<OnCountdownStateEnter>(this);
+        eventManager.Unsubscribe<OnCountdownStateExit>(this);
+        eventManager.Unsubscribe<OnMissileStateEnter>(this);
+        eventManager.Unsubscribe<OnMissileStateExit>(this);
     }
 
     private void OnDestroy()

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f2264f4bf94e04d852ef9a7b84e06c, type: 3}
   m_Name: ArcadeSpark
   m_EditorClassIdentifier: 
-  particleType: 0
+  type: 0
   prefab: {fileID: 3826784350735089423, guid: 0712eb356362b444e92e475d81faac9c, type: 3}
-  amount: 5
+  amount: 13

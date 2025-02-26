@@ -6,11 +6,10 @@ public class GameStateInstaller : Installer
 {
     public override void InstallBindings()
     {
-        Container.Bind<CountdownState>().AsSingle();
+        Container.Bind<CountdownState>().AsSingle();        
         Container.Bind<LossState>().AsSingle();
         Container.Bind<VictoryState>().AsSingle();
         InstallMovingState();
-
         Container.Bind<IStateInitializer>().To<GameStateInitializer>().AsSingle();
         Container.BindInterfacesTo<GameStateSwitcher>().AsSingle();
         Container.BindInterfacesAndSelfTo<GameStateHandler>().AsSingle().NonLazy();
@@ -24,6 +23,6 @@ public class GameStateInstaller : Installer
         Container.Bind<InteractiveSubstate>().AsSingle();
         Container.BindInterfacesAndSelfTo<SubstateInitializer>().AsSingle();
         Container.BindInterfacesAndSelfTo<SubstateSwitcher>().AsSingle();
-        Container.Bind<SubstateHandler>().AsSingle().NonLazy();        
-    }
+        Container.Bind<SubstateHandler>().AsSingle().NonLazy();
+    }    
 }

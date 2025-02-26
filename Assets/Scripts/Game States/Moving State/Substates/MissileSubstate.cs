@@ -7,16 +7,17 @@ namespace GameStates.Moving
     {
         private ISubstateSwitcher<MovingStateSubstate> substateSwitcher;
         private IEventManager eventManager;
-        private ICoroutineRunner coroutineRunner;        
+        private ICoroutineRunner coroutineRunner;
+        private float duration;
 
-        private Coroutine coroutine;
-        private readonly float duration = 2f;
+        private Coroutine coroutine;        
 
-        public MissileSubstate(ISubstateSwitcher<MovingStateSubstate> substateSwitcher, IEventManager eventManager, ICoroutineRunnerHolder runnerHolder)
+        public MissileSubstate(ISubstateSwitcher<MovingStateSubstate> substateSwitcher, IEventManager eventManager, ICoroutineRunnerProvider runnerProvider, GameConfig gameConfig)
         {
             this.substateSwitcher = substateSwitcher;
             this.eventManager = eventManager;
-            coroutineRunner = runnerHolder.CoroutineRunner;          
+            coroutineRunner = runnerProvider.GetCoroutineRunner();  
+            duration = gameConfig.MissileSateDuration;
         }
 
         public void Enter()

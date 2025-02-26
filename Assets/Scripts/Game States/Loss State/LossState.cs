@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 namespace GameStates
 {
     public class LossState : IGameState
     {
-        private IStateSwitcher stateSwitcher;
+        private readonly IEventManager eventManager;
 
-        public LossState(IStateSwitcher stateSwitcher) => this.stateSwitcher = stateSwitcher;
+        public LossState(IEventManager eventManager)
+        {
+            this.eventManager = eventManager;
+        }       
 
         public void Enter()
         {
-
+            eventManager.Publish(new OnLossStateEnter());
         }
 
         public void Exit() { }

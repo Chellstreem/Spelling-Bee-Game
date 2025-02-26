@@ -1,6 +1,6 @@
 using Zenject;
 
-public class GameStateHandler : ITickable
+public class GameStateHandler : ITickable, IInitializable
 {
     private readonly IStateInitializer stateInitializer;
     private readonly IStateSwitcher stateSwitcher;
@@ -9,9 +9,12 @@ public class GameStateHandler : ITickable
     {
         this.stateInitializer = stateInitializer;
         this.stateSwitcher = stateSwitcher;        
+    }
 
-        this.stateInitializer.InitializeStates();
-        this.stateSwitcher.SetState(GameStates.GameState.Countdown);
+    public void Initialize()
+    {
+        stateInitializer.InitializeStates();
+        stateSwitcher.SetState(GameStates.GameState.Countdown);
     }
 
     public void Tick()

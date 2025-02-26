@@ -1,31 +1,39 @@
-using UnityEngine;
+using Particles;
 using Zenject;
 
 namespace MovableObjects
 {
-    public class InteractableObject : MovableObject, IEventSubscriber<OnInteractiveSubstateExit>
-    {
+    public class InteractableObject : MovableObject, IEventSubscriber<OnWordCompleted>, IEventSubscriber<OnBeingDamaged>
+    {        
         private void OnEnable()
         {
             StartMoving();            
-            eventManager.Subscribe<OnInteractiveSubstateExit>(this);
+            eventManager.Subscribe<OnWordCompleted>(this);
+            eventManager.Subscribe<OnBeingDamaged>(this);
         }
 
         private void OnDisable()
         {
             StopMoving();            
-            eventManager.Unsubscribe<OnInteractiveSubstateExit>(this);
+            eventManager.Unsubscribe<OnWordCompleted>(this);
+            eventManager.Unsubscribe<OnBeingDamaged>(this);
         }
 
         private void OnDestroy()
         {            
-            eventManager.Unsubscribe<OnInteractiveSubstateExit>(this);
+            eventManager.Unsubscribe<OnWordCompleted>(this);
+            eventManager.Unsubscribe<OnBeingDamaged>(this);
         }
 
-        public void OnEvent(OnInteractiveSubstateExit eventData)
+        public void OnEvent(OnWordCompleted eventData)
         {
-            particlePlayer.PlayParticle(ParticleType.BasicSpark, transform.position);
+            particlePlayer.PlayParticle(ParticleType.ArcadeSpark, transform.position);
             ReturnToOriginalState();
-        }       
+        }
+
+        public void OnEvent(OnBeingDamaged eventData)
+        {
+            StopMoving();
+        }
     }
 }

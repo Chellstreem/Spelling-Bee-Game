@@ -2,19 +2,17 @@
 
 namespace GameStates
 {
-    public class MovingState : IGameState, IUpdatable, IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>
+    public class MovingState : IGameState, IUpdatable, IEventSubscriber<OnVictory>, IEventSubscriber<OnBeingDamaged>, IEventSubscriber<OnLetterChecked>
     {
-        private IStateSwitcher stateSwitcher;
-        private IHorizontalMovement playerMover;
-        private IEventManager eventManager;
-        private IInputHandler inputHandler;
+        private readonly IStateSwitcher stateSwitcher;        
+        private readonly IEventManager eventManager;
+        private IInputHandler input;
 
-        public MovingState(IStateSwitcher stateSwitcher, IHorizontalMovement playerMover, IEventManager eventManager, IInputHandler inputHandler)
+        public MovingState(IStateSwitcher stateSwitcher, IEventManager eventManager, IInputHandler input)
         {
-            this.stateSwitcher = stateSwitcher;
-            this.playerMover = playerMover;
-            this.eventManager = eventManager; 
-            this.inputHandler = inputHandler;
+            this.stateSwitcher = stateSwitcher;            
+            this.eventManager = eventManager;
+            this.input = input;
         }
 
         public void Enter()
@@ -29,32 +27,36 @@ namespace GameStates
             UnsubscribeFromEvents();
         }
 
-        public void Update()
-        {
-            playerMover.Move();
-            inputHandler.HandleInput();
-        }
+        public void Update() => input.HandleInput();        
 
         public void OnEvent(OnVictory eventData)
         {
             stateSwitcher.SetState(GameState.Victory);
         }
 
-        public void OnEvent(OnDeath eventData)
+        public void OnEvent(OnBeingDamaged eventData)
         {
             stateSwitcher.SetState(GameState.Loss);
         }
 
+        public void OnEvent(OnLetterChecked eventData)
+        {
+            if (!eventData.IsCorrect)
+                stateSwitcher.SetState(GameState.Loss);
+        }
+
         private void SubscribeToEvents()
         {
-            eventManager.Subscribe<OnDeath>(this);
+            eventManager.Subscribe<OnBeingDamaged>(this);
             eventManager.Subscribe<OnVictory>(this);
+            eventManager.Subscribe<OnLetterChecked>(this);
         }
 
         private void UnsubscribeFromEvents()
         {
-            eventManager.Unsubscribe<OnDeath>(this);
+            eventManager.Unsubscribe<OnBeingDamaged>(this);
             eventManager.Unsubscribe<OnVictory>(this);
+            eventManager.Unsubscribe<OnLetterChecked>(this);
         }
     }
 }

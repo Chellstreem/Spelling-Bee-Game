@@ -29,7 +29,14 @@ namespace GameStates.Moving
 
         public void OnEvent(OnWordCompleted eventData)
         {
-            substateSwitcher.SetSubstate(MovingStateSubstate.Safe);
+            if (eventData.GameplayAction == GameplayActionType.Missiles)
+            {
+                substateSwitcher.SetSubstate(MovingStateSubstate.Missile);
+            }
+            else
+            {
+                substateSwitcher.SetSubstate(MovingStateSubstate.Safe);
+            }            
         }
 
         public void OnEvent(OnOrbMissileCollected eventData)

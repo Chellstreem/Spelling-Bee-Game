@@ -1,10 +1,12 @@
 using Zenject;
+using PlayerMobility;
 
 public class MovementInstaller : Installer
 {
     public override void InstallBindings()
     {
         Container.BindInterfacesTo<PlayerMovement>().AsSingle();
-        Container.Bind<IInputHandler>().To<InputHandler>().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<DesktopInput>().AsSingle();
+        Container.BindInterfacesAndSelfTo<PlayerMovementHandler>().AsSingle().NonLazy();
     }
 }

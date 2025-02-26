@@ -2718,6 +2718,7 @@ PrefabInstance:
     - {fileID: 0}
     - {fileID: 5308876498125090443, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
     - {fileID: 603280346648772377, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
+    - {fileID: 6608492100268292977, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2908,6 +2909,7 @@ PrefabInstance:
     - {fileID: 0}
     - {fileID: 5308876498125090443, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
     - {fileID: 603280346648772377, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
+    - {fileID: 6608492100268292977, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -3006,7 +3008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &918463259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5841,6 +5843,7 @@ PrefabInstance:
     - {fileID: 0}
     - {fileID: 5308876498125090443, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
     - {fileID: 603280346648772377, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
+    - {fileID: 6608492100268292977, guid: 2871a530f61c40f4f85709a91a1ba6fc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

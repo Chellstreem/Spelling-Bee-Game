@@ -9,12 +9,12 @@ namespace GameStates.Moving
         private readonly ICoroutineRunner coroutineRunner;
 
         private Coroutine coroutine;
-        private readonly float duration = 1.5f;
+        private readonly float duration = 0.8f;
 
-        public SafeSubstate(ISubstateSwitcher<MovingStateSubstate> substateSwitcher, ICoroutineRunnerHolder runnerHolder)
+        public SafeSubstate(ISubstateSwitcher<MovingStateSubstate> substateSwitcher, ICoroutineRunnerProvider runnerProvider)
         {
             this.substateSwitcher = substateSwitcher;
-            coroutineRunner = runnerHolder.CoroutineRunner;
+            coroutineRunner = runnerProvider.GetCoroutineRunner();
         }
 
         public void Enter()

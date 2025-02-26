@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public interface IParticlePool
+namespace Particles
 {
-    public ParticleSystem GetParticle(ParticleType particleType);
-    public void ReturnParticle(ParticleType particleType, ParticleSystem particle);
+    public interface IParticlePool
+    {
+        public ParticleSystem GetParticle(ParticleType particleType);
+        public void ReturnParticle(ParticleType particleType, ParticleSystem particle);
+    }
 }
