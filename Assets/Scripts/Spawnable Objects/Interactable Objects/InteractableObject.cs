@@ -1,13 +1,11 @@
 using UnityEngine;
+using Zenject;
 
 namespace InteractableObjects
 {
-    public class InteractableObject : MonoBehaviour
-    {        
-        protected virtual void OnPlayerCollision()
-        {
-            gameObject.SetActive(false);
-        }
+    public abstract class InteractableObject : MonoBehaviour
+    {
+        protected abstract void OnPlayerCollision();        
 
         private void OnTriggerEnter(Collider other)
         {

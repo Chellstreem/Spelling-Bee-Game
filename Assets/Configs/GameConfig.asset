@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56792b09d0a6c634c967c07a0d96ac4a, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3191624550175880182, guid: e0763cdeb3aea7740842ec6cb95054c3, type: 3}
   coroutineRunnerPrefab: {fileID: 4520891139683978200, guid: 0b714f09c2057b748a7d6340811d93c5, type: 3}
   speed: 20
-  playerPrefab: {fileID: 3191624550175880182, guid: e0763cdeb3aea7740842ec6cb95054c3, type: 3}
+  maxLives: 3
+  livesOnStart: 3
   lowerPlayerPosition: {x: -1.33, y: 0, z: -42.74}
   upperPlayerPosition: {x: -1.33, y: 5, z: -42.74}
   moveSpeed: 25
@@ -28,7 +30,7 @@ MonoBehaviour:
   maskedLetterThreshold: 5
   maskedLetterMinNum: 1
   maskedLetterMaxNum: 2
-  extraLettersCount: 7
+  extraLettersCount: 6
   availableLetters: abcdefghijklmnopqrstuvwxyz
   count: 3
   fontSize: 320

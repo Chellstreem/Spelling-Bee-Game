@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 6
   prefab: {fileID: 5049024427268572921, guid: b64457afddb0491448570701b16b4370, type: 3}
-  amount: 2
+  amount: 3

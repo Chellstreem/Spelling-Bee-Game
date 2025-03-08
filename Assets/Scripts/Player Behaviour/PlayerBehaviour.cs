@@ -1,39 +1,49 @@
+using System;
 using UnityEngine;
 using Zenject;
 
-public class PlayerBehaviour : IEventSubscriber<OnLetterCollision>, IEventSubscriber<OnVictory>, IEventSubscriber<OnBeingDamaged>
+public class PlayerBehaviour : IEventSubscriber<OnLetterCollision>,
+    IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>, IDisposable
 {
-    private IEventManager eventManager;
-    private IPlayerAnimationPlayer animations;
-    private IPhysicsModifier physics;
+    private readonly IEventManager eventManager;
+    private readonly IPlayerAnimationPlayer animations;
+    private readonly IPhysicsModifier physics;
+    private readonly IHealth playerHealth;
+    private readonly Vector3 newColliderCenter;
 
     private readonly Rigidbody rigidBody;
-    private readonly BoxCollider boxCollider;
+    private readonly BoxCollider boxCollider;    
 
-    private readonly Vector3 newColliderCenter = new Vector3(0, 1.3f, 0.38f);
-    
-    public PlayerBehaviour(IEventManager eventManager, IPlayerAnimationPlayer animations, IPhysicsModifier physics, IPlayerGetter playerGetter)
+    public PlayerBehaviour(IEventManager eventManager, IPlayerAnimationPlayer animations,
+        IPhysicsModifier physics, [Inject(Id = InstantiatedObjectType.Player)] Transform playerTransform,
+        IHealth health, PlayerBehaviourConfig config)
     {
         this.eventManager = eventManager;
         this.animations = animations;
         this.physics = physics;
+        playerHealth = health;
+        newColliderCenter = config.NewColliderCenter;
 
-        rigidBody = playerGetter.GetPlayer().GetComponent<Rigidbody>();
-        boxCollider = playerGetter.GetPlayer().GetComponent<BoxCollider>();
+        rigidBody = playerTransform.GetComponent<Rigidbody>();
+        boxCollider = playerTransform.GetComponent<BoxCollider>();
 
         SubscribeToEvents();
-    }    
-    
-    public void OnEvent(OnLetterCollision eventData) => animations.Flinch();
-    
-    public void OnEvent(OnVictory eventData) => animations.Dance();    
+    }
 
-    public void OnEvent(OnBeingDamaged eventData)
+    private void OnLifeChanged(HealthChangeType changeType) => animations.Flinch();    
+
+    public void OnEvent(OnLetterCollision eventData) => animations.Flinch();
+
+    public void OnEvent(OnVictory eventData) => animations.Dance();
+
+    public void OnEvent(OnDeath eventData)
     {
         animations.Die();
         FallDown();
-    } 
-    
+    }
+
+    public void Dispose() => UnsubscribeFromEvents();
+
     private void FallDown()
     {
         physics.SetGravity(rigidBody, true);
@@ -43,15 +53,17 @@ public class PlayerBehaviour : IEventSubscriber<OnLetterCollision>, IEventSubscr
     private void SubscribeToEvents()
     {
         eventManager.Subscribe<OnLetterCollision>(this);
-        eventManager.Subscribe<OnBeingDamaged>(this);
+        eventManager.Subscribe<OnDeath>(this);
         eventManager.Subscribe<OnVictory>(this);
+        playerHealth.OnHealthChanged += OnLifeChanged;
     }
 
     private void UnsubscribeFromEvents()
     {
         eventManager.Unsubscribe<OnLetterCollision>(this);
-        eventManager.Unsubscribe<OnBeingDamaged>(this);
-        eventManager.Unsubscribe<OnVictory>(this);        
+        eventManager.Unsubscribe<OnDeath>(this);
+        eventManager.Unsubscribe<OnVictory>(this);
+        playerHealth.OnHealthChanged -= OnLifeChanged;
     }
 }
 

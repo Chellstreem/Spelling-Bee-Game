@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -34,8 +33,7 @@ namespace GameStates
                 currentState?.Exit();
                 currentState = stateInitializer.GetGameState(newState);
                 currentStateName = newState;
-
-                Debug.Log($"Entering {newState.ToString()} state...");
+                
                 currentState.Enter();
             }
         }

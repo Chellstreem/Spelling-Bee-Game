@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using GameplayData;
 
 public class MainMenuUI : MonoBehaviour
 {
@@ -44,8 +45,8 @@ public class MainMenuUI : MonoBehaviour
             return;
         }
 
-        GameplayData.SavedWords = savedWords;
-        GameplayData.Speed = (difficultyToggle.toggle.isOn ? fastSpeed : normalSpeed);
+        GameplayData.GameplayData.SavedWords = savedWords;
+        GameplayData.GameplayData.Speed = (difficultyToggle.toggle.isOn ? fastSpeed : normalSpeed);
 
         SceneManager.LoadScene(2);
     }

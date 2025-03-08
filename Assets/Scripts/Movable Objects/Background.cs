@@ -19,26 +19,22 @@ namespace MovableObjects
         {
             while (true)
             {
-                transform.Translate(Vector3.right * speed * Time.deltaTime);
+                Vector3 newPosition = transform.position;
+                newPosition += Vector3.back * (speed * Time.deltaTime);
 
-                if (transform.position.z < thresholdZ)
+                if (newPosition.z < thresholdZ)
                 {
-                    transform.position = startPosition;
+                    newPosition = startPosition;
                 }
 
+                transform.position = newPosition;
                 yield return null;
             }
         }
 
-        public void OnEvent(OnMovingStateEnter eventData)
-        {
-            StartMoving();
-        }
+        public void OnEvent(OnMovingStateEnter eventData) => StartMoving();        
 
-        public void OnEvent(OnMovingStateExit eventData)
-        {
-            StopMoving();
-        }
+        public void OnEvent(OnMovingStateExit eventData) => StopMoving();        
 
         private void OnDestroy()
         {

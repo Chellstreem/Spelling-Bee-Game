@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f91edb63a655947989e580da1ae9bf, type: 3}
   m_Name: CameraConfig
   m_EditorClassIdentifier: 
-  cameraPrefab: {fileID: 7211381242485380530, guid: cbb5bcbafcd7d7f4cb17fa7ace5501dd, type: 3}
+  cameraObjects:
+  - {fileID: 11400000, guid: 8e39ec872dd92a343a94cdd519dcfd05, type: 2}
   states:
   - {fileID: 11400000, guid: b12dd19a6a5204b46b9a44d4cb2bf9f6, type: 2}
   - {fileID: 11400000, guid: 6f7c4070997f5054194a8f4b60a6383e, type: 2}
   - {fileID: 11400000, guid: 73e35a66998f3d649ad5b83917ef8549, type: 2}
   - {fileID: 11400000, guid: cb389858eb1c448488d70e190a4d1612, type: 2}
   cameraShakeIntensity: 1.2
-  cameraShakeDuration: 5
+  cameraShakeDuration: 6

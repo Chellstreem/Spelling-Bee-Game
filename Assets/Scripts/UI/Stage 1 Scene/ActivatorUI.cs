@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSubscriber<OnBeingDamaged>,
+public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSubscriber<OnDeath>,
     IEventSubscriber<OnCountdownStateEnter>, IEventSubscriber<OnCountdownStateExit>, IEventSubscriber<OnMissileStateEnter>,
     IEventSubscriber<OnMissileStateExit>
 {
@@ -21,7 +21,7 @@ public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSub
     private void SubscribeToEvents()
     {
         eventManager.Subscribe<OnVictory>(this);
-        eventManager.Subscribe<OnBeingDamaged>(this);
+        eventManager.Subscribe<OnDeath>(this);
         eventManager.Subscribe<OnCountdownStateEnter>(this);
         eventManager.Subscribe<OnCountdownStateExit>(this);
         eventManager.Subscribe<OnMissileStateEnter>(this);
@@ -30,7 +30,7 @@ public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSub
     
     public void OnEvent(OnVictory eventData) => ShowGameOverMenu();
 
-    public void OnEvent(OnBeingDamaged eventData) => ShowGameOverMenu(); 
+    public void OnEvent(OnDeath eventData) => ShowGameOverMenu(); 
     
     public void OnEvent(OnCountdownStateEnter eventData) => ToggleCountdownBarActivation(true); 
     
@@ -49,7 +49,7 @@ public class ActivatorUI : MonoBehaviour, IEventSubscriber<OnVictory>, IEventSub
     private void UnsubscribeFromEvents()
     {
         eventManager.Unsubscribe<OnVictory>(this); 
-        eventManager.Unsubscribe<OnBeingDamaged>(this);
+        eventManager.Unsubscribe<OnDeath>(this);
         eventManager.Unsubscribe<OnCountdownStateEnter>(this);
         eventManager.Unsubscribe<OnCountdownStateExit>(this);
         eventManager.Unsubscribe<OnMissileStateEnter>(this);

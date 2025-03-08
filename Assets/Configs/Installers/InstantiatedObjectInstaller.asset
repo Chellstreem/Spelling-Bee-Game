@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d8d2245b54b65b48bb42cf42d7df27a, type: 3}
+  m_Name: InstantiatedObjectInstaller
+  m_EditorClassIdentifier: 
+  coroutineRunnerPrefab: {fileID: 4520891139683978200, guid: 0b714f09c2057b748a7d6340811d93c5, type: 3}
+  playerPrefab: {fileID: 3191624550175880182, guid: e0763cdeb3aea7740842ec6cb95054c3, type: 3}
+  healthBarPrefab: {fileID: 8375581735939677268, guid: 6a7a678a44a1b28468904ef5be7d7365, type: 3}

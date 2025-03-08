@@ -5,14 +5,14 @@ namespace Particles
 {
     public class ParticlePool : IParticlePool
     {
-        private ParticleCollection particleCollection;
+        private readonly ParticleConfig particleConfig;
 
         private Dictionary<ParticleType, Queue<ParticleSystem>> poolDictionary;
         private GameObject poolHolder;
 
-        public ParticlePool(ParticleCollection particleCollection)
+        public ParticlePool(ParticleConfig particleConfig)
         {
-            this.particleCollection = particleCollection;
+            this.particleConfig = particleConfig;
 
             InitializePools();
         }        
@@ -37,16 +37,14 @@ namespace Particles
         private void InitializePools()
         {
             poolDictionary = new Dictionary<ParticleType, Queue<ParticleSystem>>();
-
             poolHolder = new GameObject("Particle Pool");
 
-            foreach (var particleObject in particleCollection.ParticleObjects)
+            foreach (var particleObject in particleConfig.ParticleObjects)
             {
                 var particleType = particleObject.Type;
 
                 if (!poolDictionary.ContainsKey(particleType))
                     poolDictionary[particleType] = new Queue<ParticleSystem>();
-
 
                 for (int i = 0; i < particleObject.Amount; i++)
                 {

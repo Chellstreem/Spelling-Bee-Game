@@ -8,25 +8,28 @@ namespace MovableObjects
     public class LaunchedMissile : MovableObject
     {
         [Inject]
-        public override void Construct(IEventManager eventManager, IParticlePlayer particlePlayer, GameConfig gameConfig)
+        public override void Construct(IEventManager eventManager, ISpawnableObjectReturner objectReturner, GameConfig gameConfig)
         {
-            this.eventManager = eventManager; 
-            this.particlePlayer = particlePlayer;
+            this.eventManager = eventManager;
+            this.objectReturner = objectReturner;
             speed = gameConfig.MissileSpeed;
             thresholdZ = gameConfig.ThresholdZ;
         }
-         
+
         protected override IEnumerator MoveCoroutine()
         {
             while (true)
             {
-                transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World); 
-                if (transform.position.z <= thresholdZ)
+                Vector3 newPosition = transform.position;
+                newPosition += Vector3.back * (speed * Time.deltaTime);
+
+                if (newPosition.z <= thresholdZ)
                 {
                     StopMoving();
                     ReturnToOriginalState();
                 }
 
+                transform.position = newPosition;
                 yield return null;
             }
         }

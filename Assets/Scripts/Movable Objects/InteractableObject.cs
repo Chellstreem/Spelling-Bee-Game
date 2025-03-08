@@ -3,37 +3,55 @@ using Zenject;
 
 namespace MovableObjects
 {
-    public class InteractableObject : MovableObject, IEventSubscriber<OnWordCompleted>, IEventSubscriber<OnBeingDamaged>
-    {        
+    public class InteractableObject : MovableObject, IEventSubscriber<OnWordCompleted>, 
+        IEventSubscriber<OnMovingStateExit>, IEventSubscriber<OnMissileStateEnter>
+    {
+        [Inject]
+        private readonly IParticlePlayer particlePlayer;
+
         private void OnEnable()
         {
-            StartMoving();            
-            eventManager.Subscribe<OnWordCompleted>(this);
-            eventManager.Subscribe<OnBeingDamaged>(this);
+            SubscribeToEvents();
+            StartMoving();
         }
 
         private void OnDisable()
         {
-            StopMoving();            
-            eventManager.Unsubscribe<OnWordCompleted>(this);
-            eventManager.Unsubscribe<OnBeingDamaged>(this);
+            StopMoving();
+            UnsubscribeFromEvents();
         }
 
         private void OnDestroy()
-        {            
-            eventManager.Unsubscribe<OnWordCompleted>(this);
-            eventManager.Unsubscribe<OnBeingDamaged>(this);
+        {
+            UnsubscribeFromEvents();
         }
 
         public void OnEvent(OnWordCompleted eventData)
         {
-            particlePlayer.PlayParticle(ParticleType.ArcadeSpark, transform.position);
+            particlePlayer.PlayParticle(ParticleType.Poof, transform.position);
             ReturnToOriginalState();
         }
 
-        public void OnEvent(OnBeingDamaged eventData)
+        public void OnEvent(OnMissileStateEnter eventData)
         {
-            StopMoving();
+            particlePlayer.PlayParticle(ParticleType.Poof, transform.position);
+            ReturnToOriginalState();
+        }
+
+        public void OnEvent(OnMovingStateExit eventData) => StopMoving();        
+
+        private void SubscribeToEvents()
+        {
+            eventManager.Subscribe<OnWordCompleted>(this);
+            eventManager.Subscribe<OnMovingStateExit>(this);
+            eventManager.Subscribe<OnMissileStateEnter>(this);
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            eventManager.Unsubscribe<OnWordCompleted>(this);
+            eventManager.Unsubscribe<OnMovingStateExit>(this);
+            eventManager.Unsubscribe<OnMissileStateEnter>(this);
         }
     }
 }

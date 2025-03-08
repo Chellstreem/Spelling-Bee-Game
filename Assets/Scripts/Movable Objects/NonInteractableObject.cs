@@ -1,4 +1,3 @@
-
 namespace MovableObjects
 {
     public class NonInteractableObject : MovableObject, IEventSubscriber<OnMovingStateExit>

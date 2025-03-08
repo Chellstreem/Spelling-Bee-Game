@@ -5,13 +5,13 @@ namespace Particles
 {
     public class ParticlePlayer : IParticlePlayer
     {
-        private IParticlePool particlePool;        
-        private ICoroutineRunner coroutineRunner;        
+        private readonly IParticlePool particlePool;        
+        private readonly ICoroutineRunner coroutineRunner;        
 
-        public ParticlePlayer(IParticlePool particlePool, ICoroutineRunnerProvider runnerProvider)
+        public ParticlePlayer(IParticlePool particlePool, ICoroutineRunner coroutineRunner)
         {
             this.particlePool = particlePool;            
-            coroutineRunner = runnerProvider.GetCoroutineRunner();                      
+            this.coroutineRunner = coroutineRunner;                      
         }         
 
         public void PlayParticle(ParticleType particleType, Vector3 position)
@@ -23,6 +23,18 @@ namespace Particles
 
             coroutineRunner.StartCor(ReturnToPoolAfterPlay(particleType, particle));
         }
+
+        public void PlayParticle(ParticleType particleType, Vector3 position, float delay)
+        {
+            coroutineRunner.StartCor(DelayedParticleCoroutine(particleType, position, delay));
+        }
+
+        private IEnumerator DelayedParticleCoroutine(ParticleType particleType, Vector3 position, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            PlayParticle(particleType, position);
+        }
+
 
         private IEnumerator ReturnToPoolAfterPlay(ParticleType particleType, ParticleSystem particle)
         {

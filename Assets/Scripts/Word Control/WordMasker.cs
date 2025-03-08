@@ -9,11 +9,11 @@ public class WordMasker : IWordMasker
     private readonly int maskedLetterMinNum;
     private readonly int maskedLetterMaxNum;
 
-    public WordMasker(GameConfig gameConfig)
+    public WordMasker(WordControlConfig config)
     {
-        maskedLetterThreshold = gameConfig.MaskedLetterThreshold;
-        maskedLetterMinNum = gameConfig.MaskedLetterMinNum;
-        maskedLetterMaxNum = gameConfig.MaskedLetterMaxNum;
+        maskedLetterThreshold = config.MaskedLetterThreshold;
+        maskedLetterMinNum = config.MaskedLetterMinNum;
+        maskedLetterMaxNum = config.MaskedLetterMaxNum;
     }
 
     public MaskedWordData MaskWord(string word)

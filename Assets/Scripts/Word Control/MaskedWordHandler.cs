@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MaskedWordHandler : IMaskedWordGetter, IMaskedWordHandler, IHiddenIndexGetter
 {
-    private IWordMasker wordMasker;    
+    private readonly IWordMasker wordMasker;    
 
     private MaskedWordData currentMaskedWord;
 

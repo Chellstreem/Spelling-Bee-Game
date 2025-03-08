@@ -1,24 +1,23 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Zenject;
-using Particles;
 
 namespace MovableObjects
 {
     public abstract class MovableObject : MonoBehaviour
     {
-        protected IEventManager eventManager;
-        protected IParticlePlayer particlePlayer;
+        protected IEventManager eventManager; 
+        protected ISpawnableObjectReturner objectReturner;
         protected float speed;
         protected float thresholdZ;
 
         private Coroutine moveCoroutine;
 
         [Inject]
-        public virtual void Construct(IEventManager eventManager, IParticlePlayer particlePlayer, GameConfig gameConfig)
+        public virtual void Construct(IEventManager eventManager, ISpawnableObjectReturner objectReturner, GameConfig gameConfig)
         {
-            this.eventManager = eventManager; 
-            this.particlePlayer = particlePlayer;
+            this.eventManager = eventManager;  
+            this.objectReturner = objectReturner;
             speed = gameConfig.Speed;
             thresholdZ = gameConfig.ThresholdZ;
         }
@@ -27,13 +26,16 @@ namespace MovableObjects
         {
             while (true)
             {
-                transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World); // пофиксить скорость
-                if (transform.position.z <= thresholdZ)
+                Vector3 newPosition = transform.position;
+                newPosition += Vector3.back * (speed * Time.deltaTime);
+
+                if (newPosition.z <= thresholdZ)
                 {
                     StopMoving();
                     ReturnToOriginalState();
                 }
 
+                transform.position = newPosition;
                 yield return null;
             }
         }
@@ -53,6 +55,6 @@ namespace MovableObjects
             moveCoroutine = null;
         }
 
-        protected virtual void ReturnToOriginalState() => eventManager.Publish(new OnReturnedToPool(gameObject));        
+        protected virtual void ReturnToOriginalState() => objectReturner.ReturnObject(gameObject);        
     }
 }
